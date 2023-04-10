@@ -6,9 +6,10 @@ This project demonstrates how to use Python to simulate the behavior of a Autosa
 
 To use this project, you will need to have the following installed:
 
-Python 3.x
-textX
-Jinja2
+* Python 3.x - https://www.python.org/downloads/
+* textX      - pip install textX
+* Jinja2     - pip install Jinja2
+
 Once you have these dependencies installed, you can clone this repository and run the main.py script.
 
 ## Usage
