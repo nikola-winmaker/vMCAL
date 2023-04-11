@@ -3,7 +3,7 @@ from posixpath import dirname
 import jinja2
 from textx.metamodel import metamodel_from_file
 
-this_folder = dirname(__file__)
+this_folder = '.'
 
 mcal_metamodel = metamodel_from_file('mcal.tx', debug=False)
 
@@ -30,14 +30,14 @@ def mcal_generator():
         # Load C template
         template = jinja_env.get_template('%s.c_template'% module.name)
          # For each entity generate java file
-        with open(os.path.join('src_gen',
+        with open(os.path.join('..', 'src_gen',
                       "%s.c" % module.name), 'w') as f:
             f.write(template.render(module=module))
     # generate python code
         # Load the Py template
         template = jinja_env.get_template('%s.p_template'% module.name)
          # For each entity generate java file
-        with open(os.path.join('src_gen',
+        with open(os.path.join('..', 'src_gen',
                       "%s.py" % module.name), 'w') as f:
             f.write(template.render(module=module))
 
