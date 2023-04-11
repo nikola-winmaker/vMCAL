@@ -9,8 +9,11 @@ class AutosarSIL:
     def __init__(self, dll_path):
         # Load the DLL and import the functions
         self.app_dll = ctypes.CDLL(dll_path)
+
         # instantiate vFlash
         self.vFLS = vFlash(self.app_dll)
+        # initialize callbacks
+        self.vFLS.set_callbacks()
 
     def init_dll_appl(self):
         # msg receiving
@@ -18,11 +21,7 @@ class AutosarSIL:
         self.autosar_thread.daemon = True
         self.autosar_thread.start()
 
-        # initialize callbacks
-        self.vFLS.set_callbacks()
-
     def run_dll_main(self):
-        print("entered DLL main")
         dll_main_func = self.app_dll.main
         dll_main_func.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_char_p)]
         dll_main_func.restype = ctypes.c_int
