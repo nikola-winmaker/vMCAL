@@ -1,0 +1,44 @@
+Modules:
+  module+=Module
+;
+
+Module:
+  'MODULE' name=ID '{'
+    parameters+=Parameter
+    events*=Events
+  '}'
+;
+
+Parameter:
+  name=ID '=' value=Value
+;
+
+Value:
+  STRING | INT | Tuple
+;
+
+Tuple:
+  '[' values+=Value[','] ']'
+;
+
+Action:
+  'DELAY' time=INT 'ms' | 'ERROR' message=STRING | 'TIMEOUT' duration=INT 'ms'
+;
+
+Cycle:
+  'CYCLE' index=INT '{'
+    actions+=Action
+  '}'
+;
+
+Event:
+  'EVENT' name=ID '{'
+    cycles+=Cycle
+  '}'
+;
+
+Events:
+  'EVENTS' '{'
+    events+=Event
+  '}'
+;
