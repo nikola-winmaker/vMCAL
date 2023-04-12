@@ -86,10 +86,10 @@ class vFlash:
         log = f"{current_time} - Write: Address: {hex(address)}, Data: {hex(data)}"
         {% elif callback_name == 'vFls_Erase' %}
         self.write_flash(address, 0xff, length)
-        log = f"{current_time} - Write: Address: {hex(address)}, Length: {hex(length)}"
+        log = f"{current_time} - Erase: Address: {hex(address)}, Length: {hex(length)}"
         {% elif callback_name == 'vFls_Read' %}
         target_address_ptr = self.read_flash(address, length)
-        log = f"{current_time} - Write: Address: {hex(address)}, Length: {hex(length)}"
+        log = f"{current_time} - Read: Address: {hex(address)}, Length: {hex(length)}"
         {% else %}
         log = f"{current_time} - {{callback_name}}"
         {% endif %}
