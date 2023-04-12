@@ -5,7 +5,7 @@ import threading
 sys.path.insert(0, '../src_gen')
 sys.path.insert(1, '../test_env/gui')
 from vFLS import vFlash
-from FlashLogger_DLL import VirtualFlashApp
+from FlashLogger import VirtualFlashApp
 
 class AutosarSIL:
     def __init__(self, dll_path):
