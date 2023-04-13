@@ -1,6 +1,30 @@
 {%- set size_parameter = module.parameters|selectattr('name', 'equalto', 'size')|first -%}
 {%- set start_address_parameter = module.parameters|selectattr('name', 'equalto', 'start_address')|first -%}
 {%- set otp_parameter = module.parameters|selectattr('name', 'equalto', 'otp')|first -%}
+{%- set sim_events = module.events -%}
+{%- set sim_actions_dict = {} -%}
+
+{#-cc Process acctions for simulation if any -#}
+{% for events in sim_events %}
+    {% for event in events.events %}
+        {% for cycle in event.cycles %}
+            {% set actions_list = [] %}
+            {% for action in cycle.actions %}
+                {% set action_dict = {} %}
+                {% if action.__class__.__name__ == 'Delay' %}
+                    {% set _ = action_dict.update({'type': 'DELAY', 'time': action.time}) %}
+                {% elif action.__class__.__name__ == 'Error' %}
+                    {% set _ = action_dict.update({'type': 'ERROR', 'message': action.message}) %}
+                {% elif action.__class__.__name__ == 'Timeout' %}
+                    {% set _ = action_dict.update({'type': 'TIMEOUT', 'duration': action.duration}) %}
+                {% endif %}
+                {% set _ = actions_list.append(action_dict) %}
+            {% endfor %}
+            {% set _ = sim_actions_dict.update({cycle.index: actions_list}) %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+
 
 {% set vfls_callbacks = [('', 'vFls_Init'), ('address, data', 'vFls_Write'),
                          ('address, length', 'vFls_Erase'), ('', 'vFls_GetStatus'),
@@ -36,6 +60,8 @@ class vFlash:
                 self.flash_data = pickle.load(f)
         except:
             pass
+
+        self.flash_sim_actions = {{ sim_actions_dict }}
         
     def write_flash(self, address, data, length=1):
         for i in range(length):

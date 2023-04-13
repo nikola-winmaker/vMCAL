@@ -22,7 +22,19 @@ Tuple:
 ;
 
 Action:
-  'DELAY' time=INT 'ms' | 'ERROR' message=STRING | 'TIMEOUT' duration=INT 'ms'
+  Delay | Error | Timeout
+;
+
+Delay:
+  'DELAY' time=INT 'ms'
+;
+
+Error:
+  'ERROR' message=STRING
+;
+
+Timeout:
+  'TIMEOUT' duration=INT 'ms'
 ;
 
 Cycle:

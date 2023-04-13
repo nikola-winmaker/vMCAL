@@ -1,5 +1,4 @@
 import os
-from posixpath import dirname
 import jinja2
 from textx.metamodel import metamodel_from_file
 
@@ -24,7 +23,7 @@ def mcal_generator():
 
     # Create model for vFLS
     mcal_model = mcal_metamodel.model_from_file('mcal.config')
-    # Generate Java code
+    # Generate code
     for module in mcal_model.module:
     # generate C code first
         # Load C template
