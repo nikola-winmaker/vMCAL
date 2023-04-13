@@ -5,7 +5,7 @@
 
 
 typedef void (*vfls_init)           (void);
-typedef void (*vfls_write)          (int, int);
+typedef int  (*vfls_write)          (int, int);
 typedef int  (*vfls_erase)          (int, int);
 typedef int  (*vfls_get_status)     (void);
 typedef int  (*vfls_get_job_result) (void);

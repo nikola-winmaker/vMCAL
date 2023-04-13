@@ -76,8 +76,8 @@ class vFlash:
     def set_{{ callback_name }}_callback(self):
         callback = self.dll.set_{{ callback_name }}_callback
         {% if callback_name in ['vFls_Write', 'vFls_Erase'] %}     
-        callback.argtypes = [ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_int)]
-        self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(None, ctypes.c_int,  ctypes.c_int)(self.{{ callback_name }}_callback)
+        callback.argtypes = [ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int, ctypes.c_int)]
+        self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int,  ctypes.c_int)(self.{{ callback_name }}_callback)
         {% elif callback_name == 'vFls_Read' %}
         callback.argtypes = [ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)]
         self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)(self.{{ callback_name }}_callback)
@@ -101,7 +101,7 @@ class vFlash:
     {% endfor %}
 
 {% for callback_type, callback_name in vfls_callbacks %}
-    def {{ callback_name }}_callback(self{% if callback_type %}, {{ callback_type }}{% endif %}) {% if callback_name in ['vFls_GetStatus', 'vFls_GetJobResult', 'vFls_Read'] %} -> int{% endif %}:
+    def {{ callback_name }}_callback(self{% if callback_type %}, {{ callback_type }}{% endif %}) {% if callback_name in ['vFls_GetStatus', 'vFls_GetJobResult', 'vFls_Write', 'vFls_Read', 'vFls_Erase'] %} -> int{% endif %}:
         from datetime import datetime
         # get current time and format it
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -137,7 +137,7 @@ class vFlash:
             return 1 # MEMIF_JOB_FAILED
         else:
             return 0 # JOB OK
-        {% elif callback_name == 'vFls_Read' %}
+        {% elif callback_name in ['vFls_Read', 'vFls_Write', 'vFls_Erase'] %}
         return 0
         {% endif %}
         

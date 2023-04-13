@@ -29,9 +29,9 @@ Std_ReturnType Fls_Write(uint32 FlsAddr, const uint8 *DataBufferPtr, uint32 Leng
     printf("Fls_Write %x, %d, %d\n", FlsAddr, *DataBufferPtr,  Length);
     
     if (vFls_Write != NULL)
-        vFls_Write(FlsAddr, *DataBufferPtr);
+        Fls_Status = vFls_Write(FlsAddr, *DataBufferPtr);
     
-    return FLS_E_OK;
+    return Fls_Status;
 }
 
 Std_ReturnType Fls_Erase(uint32 FlsAddr, uint32 Length)
