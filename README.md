@@ -18,7 +18,7 @@ To use this project, you will need to provide an Autosar application as a DLL co
 
 ## Generating the Virtual MCAL Layer
 
-To generate the virtual MCAL layer, you will need to modify the mcal.tx file. This file specifies the structure of the virtual MCAL layer using the textX syntax. Once you have modified this file, you can run the generate_mcal.py script. This script uses textX and Jinja2 to generate the virtual MCAL layer code.
+To generate the virtual MCAL layer, you will need to modify the mcal.config file. This file specifies the structure of the virtual MCAL layer using the textX syntax. Once you have modified this file, you can run the mcal_generator.py script. This script uses textX and Jinja2 to generate the virtual MCAL layer code.
 
 ## License
 
