@@ -79,8 +79,8 @@ class vFlash:
         callback.argtypes = [ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_int)]
         self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(None, ctypes.c_int,  ctypes.c_int)(self.{{ callback_name }}_callback)
         {% elif callback_name == 'vFls_Read' %}
-        callback.argtypes = [ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)]
-        self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)(self.{{ callback_name }}_callback)
+        callback.argtypes = [ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)]
+        self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_int)(self.{{ callback_name }}_callback)
         {% elif callback_name == 'vFls_SetMode' %}
         callback.argtypes = [ctypes.CFUNCTYPE(None, ctypes.c_int)]
         self.{{callback_name}}_cbk = ctypes.CFUNCTYPE(None, ctypes.c_int)(self.{{ callback_name }}_callback)
@@ -101,7 +101,7 @@ class vFlash:
     {% endfor %}
 
 {% for callback_type, callback_name in vfls_callbacks %}
-    def {{ callback_name }}_callback(self{% if callback_type %}, {{ callback_type }}{% endif %}) {% if callback_name in ['vFls_GetStatus', 'vFls_GetJobResult'] %} -> int{% endif %}:
+    def {{ callback_name }}_callback(self{% if callback_type %}, {{ callback_type }}{% endif %}) {% if callback_name in ['vFls_GetStatus', 'vFls_GetJobResult', 'vFls_Read'] %} -> int{% endif %}:
         from datetime import datetime
         # get current time and format it
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -120,11 +120,28 @@ class vFlash:
         log = f"{current_time} - {{callback_name}}"
         {% endif %}
 
+        {% if callback_name in ['vFls_Read', 'vFls_Write', 'vFls_Erase'] %}
         self.history_data.append(log)
+        {% endif %}
+
+        # perform action in the cycle
+        ret = self.perform_event_action()
+
         {% if callback_name == 'vFls_GetStatus' %}
-        return 1 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
+        if ret in ['Error', 'Timeout']:
+            return 0 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
+        else:
+            return 1 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
         {% elif callback_name == 'vFls_GetJobResult' %}
-        return 0 # JOB OK
+        if ret in ['Error', 'Timeout']:
+            return 1 # MEMIF_JOB_FAILED
+        else:
+            return 0 # JOB OK
+        {% elif callback_name == 'vFls_Read' %}
+        return 0
         {% endif %}
         
 {% endfor %}
+    def perform_event_action(self):
+        ret = 'Delay'
+        return ret
