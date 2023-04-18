@@ -183,10 +183,10 @@ class vFlash:
         target_address_ptr = self.read_flash(address, length)
         log = f"{current_time} - Read: Address: {hex(address)}, Length: {hex(length)}"
         {% else %}
-        log = f"{current_time} - {{callback_name}}"
+        log = f"{current_time} - {{callback_name.split('_')[1]}}"
         {% endif %}
 
-        {% if callback_name in ['vFls_Read', 'vFls_Write', 'vFls_Erase'] %}
+        {% if callback_name in ['vFls_Read', 'vFls_Write', 'vFls_Erase', 'vFls_Init'] %}
         self.history_data.append(log)
         {% endif %}
 
