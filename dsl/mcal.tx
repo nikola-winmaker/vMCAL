@@ -30,7 +30,7 @@ Delay:
 ;
 
 Error:
-  'ERROR' message=STRING
+  'ERROR' message=STRING 'for' propagation_time=INT 'ms'
 ;
 
 Timeout:
@@ -38,13 +38,17 @@ Timeout:
 ;
 
 Cycle:
-  'CYCLE' index=INT '{'
+  'CYCLE' index=INT 'ms' '{'
     actions+=Action
   '}'
 ;
 
+EventName:
+  'Init' | 'Write' | 'Erase' | 'Status' | 'Result' | 'Cancel' | 'Read' | 'Set'
+;
+
 Event:
-  'EVENT' name=ID '{'
+  'EVENT' name=EventName '{'
     cycles+=Cycle
   '}'
 ;

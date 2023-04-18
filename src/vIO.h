@@ -4,7 +4,7 @@
 #include "Std_Types.h"
 
 
-typedef void (*vfls_init)           (void);
+typedef int  (*vfls_init)           (void);
 typedef int  (*vfls_write)          (int, int);
 typedef int  (*vfls_erase)          (int, int);
 typedef int  (*vfls_get_status)     (void);

@@ -11,13 +11,14 @@ Std_ReturnType Fls_Init(const Fls_ConfigType* ConfigPtr)
 {
     /* Initialize flash driver */
     /* Return FLS_E_OK if successful, FLS_E_NOT_OK otherwise */
-    
-    printf("Fls Init.\n");
+    Std_ReturnType status =  FLS_E_OK;
     
     if (vFls_Init != NULL)
-        vFls_Init(); /* all params are known in python from metamodel */
-        
-    return FLS_E_OK;
+        status = vFls_Init(); /* all params are known in python from metamodel */
+
+    printf("Fls Init called %d.\n", status);
+
+    return status;
 }
 
 Std_ReturnType Fls_Write(uint32 FlsAddr, const uint8 *DataBufferPtr, uint32 Length)
@@ -26,11 +27,12 @@ Std_ReturnType Fls_Write(uint32 FlsAddr, const uint8 *DataBufferPtr, uint32 Leng
     /* Write data to flash */
     /* Return FLS_E_OK if successful, FLS_E_NOT_OK otherwise */
     
-    printf("Fls_Write %x, %d, %d\n", FlsAddr, *DataBufferPtr,  Length);
     
     if (vFls_Write != NULL)
         Fls_Status = vFls_Write(FlsAddr, *DataBufferPtr);
-    
+
+    printf("Fls_Write %x, %d, %d, %d\n", FlsAddr, *DataBufferPtr,  Length, Fls_Status);
+
     return Fls_Status;
 }
 

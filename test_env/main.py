@@ -40,6 +40,7 @@ class AutosarSIL:
             print("DLL main returned", result)
 
     def start_simulation(self):
+        self.vFLS.simulation_enable()
         start_func = self.app_dll.start_application
         start_func.argtypes = [ctypes.CFUNCTYPE(None)]
         func = ctypes.CFUNCTYPE(None)(start_func)
