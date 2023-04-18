@@ -83,10 +83,6 @@ class vFlash:
                         else:
                             start_sim_time = args[0].start_sim_time
                             current_time_ms = args[0].time_from_start()
-                            print("*******************************************")
-                            print(start_sim_time, cycle_num, current_time_ms)
-                            print("*******************************************")
-
                             if current_time_ms  >= cycle_num:
                                 events.append(event_dict[cycle_num])
                                 if event_dict[cycle_num]['type'] != 'DELAY':
@@ -105,15 +101,18 @@ class vFlash:
 
                     for event in events:
                         if event['type'] == 'DELAY':
-                            print(event['type'], event['time'])
-
                             time.sleep(event['time']/1000) # in ms
                             result = func(*args, **kwargs)
                         elif event['type'] == 'ERROR' :
-                            print(event['type'], event['message'])
-                            #time.sleep(10000) # in ms
-
+                            # return error
                             result = 2
+
+                        from datetime import datetime
+                        # get current time and format it
+                        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        #time.sleep(10000) # in ms
+                        log = f"{current_time} - SIM INTRODUCED {event['type']}"
+                        args[0].history_data.append(log)
 
                     if len(events) == 0:
                         result = func(*args, **kwargs)                    
@@ -192,15 +191,9 @@ class vFlash:
         {% endif %}
 
         {% if callback_name == 'vFls_GetStatus' %}
-        if ret in ['Error', 'Timeout']:
-            return 0 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
-        else:
-            return 1 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
+        return 1 # 0 uninit, 1 idle, 2 busy, 3 busy or idle
         {% elif callback_name == 'vFls_GetJobResult' %}
-        if ret in ['Error', 'Timeout']:
-            return 1 # MEMIF_JOB_FAILED
-        else:
-            return 0 # JOB OK
+        return 0 # JOB OK
         {% elif callback_name in ['vFls_Read', 'vFls_Write', 'vFls_Erase', 'vFls_Init'] %}
         return 0
         {% endif %}
