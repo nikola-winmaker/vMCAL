@@ -28,14 +28,14 @@ def mcal_generator():
     # generate C code first
         # Load C template
         template = jinja_env.get_template('%s.c_template'% module.name)
-         # For each entity generate java file
+         # For each entity generate C file
         with open(os.path.join('..', 'src_gen',
                       "%s.c" % module.name), 'w') as f:
             f.write(template.render(module=module))
     # generate python code
         # Load the Py template
         template = jinja_env.get_template('%s.p_template'% module.name)
-         # For each entity generate java file
+         # For each entity generate python file
         with open(os.path.join('..', 'src_gen',
                       "%s.py" % module.name), 'w') as f:
             f.write(template.render(module=module))

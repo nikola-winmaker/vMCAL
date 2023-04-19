@@ -38,8 +38,14 @@ To generate additional components in the virtual MCAL layer, you will need to mo
 
 ## Usage notes
 
-To use this project, you will need to provide an Autosar application as a DLL compiled with vMCAL *.c and *.h files provided in src_gen folder.\
-The main.py script will load the DLL and use it to simulate the behavior of the application.
+* To use this project, you will need to provide an Autosar application as a DLL compiled with vMCAL *.c and *.h files provided in src_gen folder.
+* Make sure to implement the "start_application" function in your Autosar application. This is nessesary to synhronize both Python and C application before simulation starts.\
+ C function declaration:\
+__declspec(dllexport) void start_application(void){\
+}\
+Here you can add a blocking semaphore which you can use to wait in a loop untill semaphore is set or cleared, depending on your logic. 
+Python application will call start_application and you can set/clear a semaphore to continue C applicaiton execution.
+* The main.py script will load the DLL and use it to simulate the behavior of the application.
 
 ## License
 

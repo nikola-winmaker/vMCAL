@@ -1,6 +1,8 @@
 import sys
 import ctypes
 import threading
+import configparser
+import time 
 
 sys.path.insert(0, '../src_gen')
 sys.path.insert(1, '../test_env/gui')
@@ -60,15 +62,24 @@ class AutosarSIL:
             # Run the main function in a loop
             app.root.mainloop()
 
-dll_path = '../app_dll/c_app.dll'
+# get DLL path
+def get_dll_path():
+    try:
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        dll_path = config.get('dll', 'path')
+        return dll_path
+    except:
+        print("ERROR Parsing config.ini file!")
+        return ""
+
+dll_path = get_dll_path()
 as_sil = AutosarSIL(dll_path)
 as_sil.init_dll_appl()
 as_sil.start_flash_gui()
-
-import time
-time.sleep(1)
+# start simulation
 as_sil.start_simulation()
 print("start sim")
-
 while True:
     time.sleep(1)
+    # do nothing in main thread
