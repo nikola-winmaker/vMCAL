@@ -4,7 +4,7 @@ This project demonstrates how to use Python to test Autosar application using a 
 A virtual MCAL (Microcontroller Abstraction Layer) layer is  generated using textX and Jinja2 based on DSL specification, which allows for simulation of the hardware dependencies of the application.
 
 DSL model is written with help of textX meta-language. 
-DSL grammer for vMCAL looks like this:
+DSL grammar for vMCAL looks like this:
 
 <img src="./images/mcal.dot.png" alt="vMCAL grammar" width="418" height="458">
 
@@ -23,7 +23,7 @@ To use this project, you will need to have the following installed:
 Once you have these dependencies installed, you can clone this repository.
 
 ## Setup
-* Add events for the vMCAL module in mcal.config file in you need additional events
+* Add events for the vMCAL module in mcal.config file, if you need additional events
 * Run mcal generator: "python mcal_generator.py" which will generate needed files in src_gen for your Autosar application and python SIL environment.
 * Add your Autosar application DLL path in config.ini file
 * Run main.py script: "python main.py". This will open Terminal and graphical view of the vMCAL modules.
@@ -40,13 +40,15 @@ To generate additional components in the virtual MCAL layer, you will need to mo
 
 * To use this project, you will need to provide an Autosar application as a DLL compiled with vMCAL *.c and *.h files provided in src_gen folder.
 * Make sure to implement the "start_application" function in your Autosar application. This is nessesary to synhronize both Python and C application before simulation starts.\
- C function declaration:\
+ C function declaration: \
 __declspec(dllexport) void start_application(void){\
 }\
-Here you can add a blocking semaphore which you can use to wait in a loop untill semaphore is set or cleared, depending on your logic. 
-Python application will call start_application and you can set/clear a semaphore to continue C applicaiton execution.
+Here you can add a blocking semaphore which you can use to wait in a loop until semaphore is set or cleared, depending on your logic. 
+Python application will call start_application and you can set/clear a semaphore to continue C application execution.
 * The main.py script will load the DLL and use it to simulate the behavior of the application.
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+
