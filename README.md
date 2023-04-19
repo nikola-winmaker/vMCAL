@@ -41,8 +41,7 @@ To generate additional components in the virtual MCAL layer, you will need to mo
 * To use this project, you will need to provide an Autosar application as a shared library (currently DLL only supported).
 * Autosar application needs to be compiled with vMCAL *.c and *.h files provided in src and src_gen folder.\
   In folder src are static files which are calling generated vMCAL functions for every MCAL component.
-* Make sure to implement the "start_application" function in your Autosar application. This is nessesary to synhronize both Python and C application before simulation starts.\
-C function declaration: \
+* Make sure to implement the "start_application" function in your Autosar application. This is nessesary to synhronize both Python and C application before simulation starts.
 ```c
 __declspec(dllexport) void start_application(void)
 {
