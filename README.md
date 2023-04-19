@@ -1,8 +1,18 @@
 ## Software-in-the-Loop for Autosar environment
 
-This project demonstrates how to use Python to simulate the behavior of a Autosar application using a Software-in-the-Loop (SIL) approach. The Autosar application is compiled as a DLL (Dynamic Link Library) and loaded into the simulation environment. A virtual MCAL (Microcontroller Abstraction Layer) layer is also generated using textX and Jinja2, which allows for simulation of the hardware dependencies of the application.
+This project demonstrates how to use Python to test Autosar application using a Software-in-the-Loop (SIL) approach. The Autosar application is compiled as a DLL (Dynamic Link Library) and loaded into the simulation environment. In order to test Autosar application, MCAL layer for specific MCU has to be replaced with the behavioral model called virtual MCAL (vMCAL).
+A virtual MCAL (Microcontroller Abstraction Layer) layer is  generated using textX and Jinja2 based on DSL specification, which allows for simulation of the hardware dependencies of the application.
 
-## Installation
+DSL model is written with help of textX meta-language. 
+DSL grammer for vMCAL looks like this:
+
+<img src="./images/mcal.dot.png" alt="vMCAL grammar" width="418" height="458">
+
+Test example specified in mcal.config file produces this model:
+
+<img src="./images/mcal_example.dot.png" alt="vMCAL example" width="7615" height="447">
+
+## Dependencies
 
 To use this project, you will need to have the following installed:
 
@@ -10,15 +20,26 @@ To use this project, you will need to have the following installed:
 * textX      - pip install textX
 * Jinja2     - pip install Jinja2
 
-Once you have these dependencies installed, you can clone this repository and run the main.py script.
+Once you have these dependencies installed, you can clone this repository.
 
-## Usage
+## Setup
+* Add events for the vMCAL module in mcal.config file in you need additional events
+* Run mcal generator: "python mcal_generator.py" which will generate needed files in src_gen for your Autosar application and python SIL environment.
+* Add your Autosar application DLL path in config.ini file
+* Run main.py script: "python main.py". This will open Terminal and graphical view of the vMCAL modules.
 
-To use this project, you will need to provide an Autosar application as a DLL compiled with vMCAL functions. You can specify the path to the DLL in the config.ini file. The main.py script will load the DLL and use it to simulate the behavior of the application.
+## Example from mcal.config specification
 
-## Generating the Virtual MCAL Layer
+<img src="./images/sim.svg" alt="SIL" width="898" height="447">
 
-To generate the virtual MCAL layer, you will need to modify the mcal.config file. This file specifies the structure of the virtual MCAL layer using the textX syntax. Once you have modified this file, you can run the mcal_generator.py script. This script uses textX and Jinja2 to generate the virtual MCAL layer code.
+## Generating the Virtual MCAL Layer with other MCAL components
+
+To generate additional components in the virtual MCAL layer, you will need to modify the mcal.config file. This file specifies the structure of the virtual MCAL layer using the textX syntax. Once you have modified this file, you can run the mcal_generator.py script. This script uses textX and Jinja2 to generate the virtual MCAL layer code.
+
+## Usage notes
+
+To use this project, you will need to provide an Autosar application as a DLL compiled with vMCAL *.c and *.h files provided in src_gen folder.\
+The main.py script will load the DLL and use it to simulate the behavior of the application.
 
 ## License
 
