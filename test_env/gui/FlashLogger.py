@@ -83,7 +83,7 @@ class VirtualFlashApp:
         self.write_button = ttk.Button(self.root, text="Write", command=self.gui_write)
         self.write_button.grid(row=8, column=2, pady=2)
 
-        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.figure = Figure(figsize=(5, 4))
         self.ax = self.figure.add_subplot(111)
         self.ax.set_xlabel('Address')
         self.ax.set_ylabel('Write Count')
@@ -179,7 +179,7 @@ class VirtualFlashApp:
 
     def plot_data(self):
         while True:
-            time.sleep(2)
+            time.sleep(1)
             self.update_history()
 
     def update_time(self):
