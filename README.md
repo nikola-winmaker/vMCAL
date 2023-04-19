@@ -45,7 +45,7 @@ __declspec(dllexport) void start_application(void){\
 }\
 Here you can add a blocking semaphore which you can use to wait in a loop until semaphore is set or cleared, depending on your logic. 
 Python application will call start_application and you can set/clear a semaphore to continue C application execution.
-* The main.py script will load the DLL and use it to simulate the behavior of the application.
+* The main.py script will load the DLL to execute the application in the SIL environment.
 
 ## License
 
