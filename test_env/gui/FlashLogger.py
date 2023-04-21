@@ -17,6 +17,7 @@ class VirtualFlashApp:
         self.flash_data = flash_data
 
         self.log_index = 0
+        self.user_scrolled = False
 
         # create a label for current time
         self.time_label = ttk.Label(self.root, text="Current Time: ")
@@ -27,9 +28,12 @@ class VirtualFlashApp:
         self.logs_label.grid(row=1, column=0, sticky="w")
 
         # create a text box to display logs
+        # disable manual changes to the logs text
         self.logs_text = scrolledtext.ScrolledText(self.root, height=10, width=50, state="disabled")
         self.logs_text.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
-        # disable manual changes to the logs text
+        self.logs_scrollbar = self.logs_text.vbar
+        self.logs_scrollbar.bind("<B1-Motion>", self.on_logs_scrollbar)
+        self.logs_text.bind("<MouseWheel>", self.on_logs_text_scroll)
 
         # create a label for address input filter
         self.address_filter_label = ttk.Label(self.root, text="Filter by address: ")
@@ -164,12 +168,31 @@ class VirtualFlashApp:
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return current_time
 
+    def on_logs_text_scroll(self, *args):
+        # Set the user_scrolled flag to True
+        if  self.user_scrolled and self.logs_text.yview()[1] == 1.0:
+            self.user_scrolled = False
+        else:
+            self.user_scrolled = True
+
+    def on_logs_scrollbar(self, *args):
+        # Set the user_scrolled flag to True
+        if  self.user_scrolled and self.logs_text.yview()[1] == 1.0:
+            self.user_scrolled = False
+        else:
+            self.user_scrolled = True
+
     def update_vscroll(self):
-        # check if current scroll position is at the end of the text box
+        # Get the current vertical scroll position
         _, y_end = self.logs_text.yview()
-        if y_end > 0.9:
-            # scroll to the bottom of the plot
-            self.logs_text.yview(tk.END)
+
+        # If the user has scrolled manually, do nothing
+        if self.user_scrolled:
+            # Don't automatically scroll to the bottom if the user has manually scrolled
+            return
+
+        # scroll to the bottom
+        self.logs_text.yview(tk.END)
 
     def show_filtered_data(self):
 
