@@ -14,6 +14,7 @@ class VirtualFlashApp:
         self.root.title("Virtual Flash")
 
         self.history_data = flash_cmd_history
+        self.flash_data = flash_data
 
         self.log_index = 0
 
@@ -107,27 +108,56 @@ class VirtualFlashApp:
         self.root.protocol("WM_DELETE_WINDOW", self.close_app)
 
     def gui_write(self):
-        pass
+       # get address, data and length from entry boxes
+        try:
+            address = int(self.address_entry.get(), 16)
+            label_data = int(self.data_entry.get(), 16)
+            length = int(self.length_entry.get(), 16) if self.length_entry != '' else 0
+        except:
+            messagebox.showinfo("ERROR", "Check parameters for write!")
+            return
+
+        if address + length > len(self.flash_data):
+            messagebox.showinfo("Warning", "Write operation ERROR!")
+            return 
+
+        self.flash_data[address] = label_data
+
+
+        # add data to logs text box
+        current_time = self.get_current_time()
+        log = f"{current_time} - SIM Write: Address: {hex(address)}, Data: {hex(label_data)}"
+        # add data to history list
+        self.history_data.append(log)
+
 
     def gui_read(self):
 
-        data = ""
+        # get address and length from entry boxes
+        try:
+            address = int(self.address_entry.get(), 16)
+            length = int(self.length_entry.get(), 16)
+        except:
+            return ""
+
+        if address + length > len(self.flash_data):
+            messagebox.showinfo("Warning", "Read operation truncated!")
+            length = len(self.flash_data) - 1
 
         # create a new window
         window = tk.Toplevel()
         window.title("Read Result")
 
         # create a treeview widget
-        tree = ttk.Treeview(window, columns=("Address", "Data", "TimeStamp"), show=["headings"])
+        tree = ttk.Treeview(window, columns=("Address", "Data"), show=["headings"])
         tree.heading("Address", text="Address")
         tree.heading("Data", text="Data")
-        tree.heading("TimeStamp", text="TimeStamp")
         tree.pack(fill="both", expand=True)
         # insert the data into the treeview
-        for address, (value, timestamp) in data.items():
-            address_hex = hex(address)
-            value_hex = hex(value)
-            tree.insert("", tk.END, values=(address_hex, value_hex, timestamp))
+        for i in range(int(length)):
+            address_hex = hex(address + i)
+            value_hex = hex(self.flash_data[address + i])
+            tree.insert("", tk.END, values=(address_hex, value_hex))
 
     def get_current_time(self):
         # get current time and format it
@@ -145,11 +175,60 @@ class VirtualFlashApp:
 
         address = 0
         data = 0
+        address_inputed = True
+        data_inputed = True
 
-        print(address)
-        print(data)
+        # get address and data from entry boxes
+        try:
+            address = int(self.address_filter_entry.get(), 16)
+        except:
+            address_inputed = False
 
-        #TODO add it to a tree
+        try:
+            data = int(self.data_filter_entry.get(), 16)
+        except:
+            data_inputed = False
+
+        if not data_inputed and not address_inputed:
+            messagebox.showinfo("ERROR", "Input address or data to filter!")
+            return
+        # create a new window
+        window = tk.Toplevel()
+        window.title("Filter Result")
+        # create a treeview widget
+        tree = ttk.Treeview(window, columns=("Date", "Action", "Address", "Data"), show=["headings"])
+        tree.heading("Date", text="Date")
+        tree.heading("Action", text="Action")
+        tree.heading("Address", text="Address")
+        tree.heading("Data", text="Data")
+        tree.pack(fill="both", expand=True)
+
+        data_found = False
+        for log in self.history_data:
+
+            if "Address: " + str(hex(address)) in log and address_inputed and not data_inputed:
+                data_found = True
+            elif "Data: "+str(hex(data)) in log and data_inputed and not address_inputed:
+                data_found = True
+            elif "Address: "+str(hex(address)) in log and "Data: "+str(hex(data)) in log:
+                data_found = True
+
+
+            if data_found:
+                date_log, action_log, address_log, data_log = self.get_log_elements(log)
+                if str(hex(data)) == data_log or str(hex(address)) == address_log:
+                    tree.insert("", tk.END, values=(date_log, action_log, address_log, data_log))
+                data_found = False
+
+    def get_log_elements(self, log):
+        # 2023-04-21 13:37:18 - Write: Address: 0x1a800, Data: 0xbb
+        log_parts = log.split(' ')
+        date = log_parts[0]+"_"+log_parts[1]
+        action = log_parts[3].replace(':', '')
+        address_log = log_parts[5].replace(',', '')
+        data_log = log_parts[7]
+        return date,action,address_log,data_log
+
 
     def update_history(self):
         # plot history data
