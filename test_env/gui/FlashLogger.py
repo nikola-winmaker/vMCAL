@@ -234,7 +234,7 @@ class VirtualFlashApp:
         # plot history data
         addresses = defaultdict(int)
         for data in self.history_data:
-            if "Write" in data:
+            if "Write:" in data:
                 address = data.split(',')[0].split(':')[-1].strip()
                 addresses[address] += 1
 

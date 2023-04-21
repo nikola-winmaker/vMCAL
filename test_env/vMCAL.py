@@ -41,7 +41,7 @@ def v_fls_sim_event(func_name):
         def log_event(args, event):
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     # log the event
-            log = f"{current_time} - SIM INTRODUCED {event['type']}"
+            log = f"{current_time} - {func_name} -> SIM INTRODUCED {event['type']}"
             args[0].history_data.append(log)
 
         def get_events(args, events, event_list):
