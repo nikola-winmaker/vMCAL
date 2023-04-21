@@ -58,14 +58,14 @@ class VirtualFlashApp:
         self.user_label.grid(row=5, column=0, sticky="w")
 
         # create a label for address input
-        self.address_label = ttk.Label(self.root, text="Address in hex without 0x: ")
+        self.address_label = ttk.Label(self.root, text="Address in hex")
         self.address_label.grid(row=6, column=0, sticky="w", pady=5)
         # create an entry box for address input
         self.address_entry = ttk.Entry(self.root)
         self.address_entry.grid(row=6, column=1, sticky="w", pady=5)
 
          # create a label for length input
-        self.length_label = ttk.Label(self.root, text="Length in hex without 0x: ")
+        self.length_label = ttk.Label(self.root, text="Length in hex")
         self.length_label.grid(row=7, column=0, sticky="w", pady=5)
         # create an entry box for length input
         self.length_entry = ttk.Entry(self.root)
@@ -73,7 +73,7 @@ class VirtualFlashApp:
 
 
         # create a label for data input
-        self.data_label = ttk.Label(self.root, text="Data in hex without 0x: ")
+        self.data_label = ttk.Label(self.root, text="Data in hex: ")
         self.data_label.grid(row=8, column=0, sticky="w", pady=5)
         # create an entry box for data input
         self.data_entry = ttk.Entry(self.root)
@@ -130,7 +130,7 @@ class VirtualFlashApp:
 
         # add data to logs text box
         current_time = self.get_current_time()
-        log = f"{current_time} - SIM Write: Address: {hex(address)}, Data: {hex(label_data)}"
+        log = f"{current_time} - SIM_Write: Address: {hex(address)}, Data: {hex(label_data)}"
         # add data to history list
         self.history_data.append(log)
 
@@ -215,6 +215,7 @@ class VirtualFlashApp:
         if not data_inputed and not address_inputed:
             messagebox.showinfo("ERROR", "Input address or data to filter!")
             return
+
         # create a new window
         window = tk.Toplevel()
         window.title("Filter Result")
@@ -228,14 +229,12 @@ class VirtualFlashApp:
 
         data_found = False
         for log in self.history_data:
-
             if "Address: " + str(hex(address)) in log and address_inputed and not data_inputed:
                 data_found = True
             elif "Data: "+str(hex(data)) in log and data_inputed and not address_inputed:
                 data_found = True
             elif "Address: "+str(hex(address)) in log and "Data: "+str(hex(data)) in log:
                 data_found = True
-
 
             if data_found:
                 date_log, action_log, address_log, data_log = self.get_log_elements(log)
