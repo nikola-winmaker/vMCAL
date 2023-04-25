@@ -43,15 +43,19 @@ To generate additional components in the virtual MCAL layer, you will need to mo
   In folder src are static files which are calling generated vMCAL functions for every MCAL component.
 * Make sure to implement the "start_application" function in your Autosar application. This is nessesary to synhronize both Python and C application before simulation starts.
 ```c
+#ifdef SIL_TESTING
 __declspec(dllexport) void start_application(void)
 {
   start_sim = TRUE;
 }
+#endif
 .
 .
 main()
 {
+#ifdef SIL_TESTING
   while(!start_sim);
+#endif
 }
 
 ```
