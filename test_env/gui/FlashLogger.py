@@ -170,17 +170,21 @@ class VirtualFlashApp:
 
     def on_logs_text_scroll(self, *args):
         # Set the user_scrolled flag to True
-        if  self.user_scrolled and self.logs_text.yview()[1] == 1.0:
+        if  self.user_scrolled and self.logs_text.yview()[1] >= 0.98:
             self.user_scrolled = False
         else:
             self.user_scrolled = True
 
+        self.update_vscroll()
+
     def on_logs_scrollbar(self, *args):
         # Set the user_scrolled flag to True
-        if  self.user_scrolled and self.logs_text.yview()[1] == 1.0:
+        if  self.user_scrolled and self.logs_text.yview()[1] == 1.0 or self.logs_text.yview()[1] > 0.9:
             self.user_scrolled = False
         else:
             self.user_scrolled = True
+
+        self.update_vscroll()
 
     def update_vscroll(self):
         # Get the current vertical scroll position
